@@ -8,7 +8,7 @@ import env
 PATH = "C:\\Program Files (x86)\\chromedriver.exe"
 driver = webdriver.Chrome(PATH)
 
-driver.get("https://clattor.com/login")
+driver.get(env.URL)
 assert "Notimation" in driver.title
 
 login_email = driver.find_element(By.ID, "email")
@@ -24,7 +24,7 @@ try:
     main = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CLASS_NAME, "col py-3 px-5"))
     )
-except:
+finally:
     driver.quit()
 
 # driver.close()
