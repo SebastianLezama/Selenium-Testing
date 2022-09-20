@@ -1,11 +1,7 @@
 import unittest
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import page
-import env
+from env import URL, USER, PASS
 
 PATH = "C:\\Program Files (x86)\\chromedriver.exe"
 
@@ -14,14 +10,21 @@ class NotiCampSimple(unittest.TestCase):
 
     def setUp(self) -> None:
         self.driver = webdriver.Chrome(PATH)
-        self.driver.get(env.URL)
+        self.driver.get(URL)
+        self.driver.maximize_window()
 
-    def test_title(self):
-        loginPage = page.LoginPage()
-        assert loginPage.is_title_matches()
+    def test_login(self):
+        login_page = page.LoginPage(self.driver)
+        assert login_page.is_title_matches()
+        login_page.email_element = USER
+        login_page.pass_element = PASS
+        login_page.click_login_button()
 
-    def tearDown(self) -> None:
-        self.driver.close()
+        main_page = page.DashBoard(self.driver)
+        assert main_page.is_in_dashboard()
+
+    # def tearDown(self) -> None:
+    #     self.driver.close()
 
 
 if __name__ == '__main__':
