@@ -2,7 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-import env
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 import locator as LC
 from element import BasePageElement
 
@@ -15,8 +16,8 @@ class LoginPasswordInput(BasePageElement):
     locator = LC.LoginPageLocators.PASSWORD
 
 
-class MainContainer(BasePageElement):
-    locator = LC.MainPageLocators.CONTAINER
+# class MainContainer(BasePageElement):
+#     locator = LC.MainPageLocators.CONTAINER
 
 
 class BasePage(object):
@@ -37,10 +38,30 @@ class LoginPage(BasePage):
 
 
 class DashBoard(BasePage):
-    container_element = MainContainer()
+    # container_element = MainContainer()
 
     def is_in_dashboard(self):
-        self.driver.implicitly_wait(5)
-        main_container = self.driver.find_element(
-            *LC.MainPageLocators.CONTAINER)
-        return "mb-4" in main_container
+        try:
+            main = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located(
+                    LC.MainPageLocators.CONTAINER)
+            )
+            main_container = self.driver.find_element(
+                *LC.MainPageLocators.CONTAINER).text
+            return main_container == '¡Bienvenido a Notimation!'
+        finally:
+            self.driver.quit()
+
+    def navigate_camp(self):
+        try:
+            main = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(
+                    LC.MainPageLocators.CAMPAIGN)
+            )
+            camp_container = self.driver.find_element(
+                *LC.MainPageLocators.CAMPAIGN)
+            camp_container.click()
+            self.driver.implicitly_wait(5)
+            print("#333")
+        finally:
+            self.driver.quit()

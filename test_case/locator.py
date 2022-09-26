@@ -9,3 +9,4 @@ class LoginPageLocators(object):
 
 class MainPageLocators(object):
     CONTAINER = (By.CLASS_NAME, "mb-4")
+    CAMPAIGN = (By.PARTIAL_LINK_TEXT, "Campañas")
